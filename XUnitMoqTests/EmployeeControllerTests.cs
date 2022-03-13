@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using Xunit;
 
 namespace XUnitMoqTests
@@ -27,11 +28,11 @@ namespace XUnitMoqTests
         public void GetAll_ShouldReturnExactNumbersOfEmployees()
         {
             // Arrange
-            _mockEmpRepo.Setup(repo => repo.GetAll())
+            _mockEmpRepo.Setup(repo => repo.GetAll(CancellationToken.None))
                 .ReturnsAsync(DataSeeder.MockEmployees);
 
             // Act
-            var result = _employeeController.GetAll().Result;
+            var result = _employeeController.GetAll(CancellationToken.None).Result;
 
             // Assert
             var okResult = Assert.IsAssignableFrom<OkObjectResult>(result);
@@ -48,7 +49,7 @@ namespace XUnitMoqTests
             // Arrange
 
             // Act
-            var result = _employeeController.GetEmployee(Guid.NewGuid()).Result;
+            var result = _employeeController.GetEmployee(Guid.NewGuid(), CancellationToken.None).Result;
 
             // Assert
             var notFoundResult = Assert.IsAssignableFrom<NotFoundResult>(result);
@@ -60,11 +61,11 @@ namespace XUnitMoqTests
         {
             // Arrange
             var theEmployee = DataSeeder.MockSingleEmployee();
-            _mockEmpRepo.Setup(repo => repo.GetById(DataSeeder.SingleEmployeeId))
+            _mockEmpRepo.Setup(repo => repo.GetById(DataSeeder.SingleEmployeeId, CancellationToken.None))
                 .ReturnsAsync(theEmployee);
 
             // Act
-            var result = _employeeController.GetEmployee(DataSeeder.SingleEmployeeId).Result;
+            var result = _employeeController.GetEmployee(DataSeeder.SingleEmployeeId, CancellationToken.None).Result;
 
             // Assert
             var okResult = Assert.IsAssignableFrom<OkObjectResult>(result);
@@ -82,7 +83,7 @@ namespace XUnitMoqTests
             // Arrange
 
             // Act
-            var result = _employeeController.PostEmployee(null).Result;
+            var result = _employeeController.PostEmployee(null, CancellationToken.None).Result;
 
             // Assert
             var badResult = Assert.IsAssignableFrom<BadRequestResult>(result);
@@ -96,7 +97,7 @@ namespace XUnitMoqTests
             var newEmployee = new Employee();
 
             // Act
-            var result = _employeeController.PostEmployee(newEmployee).Result;
+            var result = _employeeController.PostEmployee(newEmployee, CancellationToken.None).Result;
 
             // Assert
             var badResult = Assert.IsAssignableFrom<BadRequestResult>(result);
@@ -108,10 +109,10 @@ namespace XUnitMoqTests
         {
             // Arrange
             var newEmployee = DataSeeder.MockSingleEmployee();
-            _mockEmpRepo.Setup(repo => repo.Add(newEmployee));
+            _mockEmpRepo.Setup(repo => repo.Add(newEmployee, CancellationToken.None));
 
             // Act
-            var result = _employeeController.PostEmployee(newEmployee).Result;
+            var result = _employeeController.PostEmployee(newEmployee, CancellationToken.None).Result;
 
             // Assert
             var createdAtActionResult = Assert.IsAssignableFrom<CreatedAtActionResult>(result);
@@ -130,7 +131,7 @@ namespace XUnitMoqTests
             // Arrange
 
             // Act
-            var result = _employeeController.PutEmployee(Guid.Empty, new Employee()).Result;
+            var result = _employeeController.PutEmployee(Guid.Empty, new Employee(), CancellationToken.None).Result;
 
             // Assert
             var badResult = Assert.IsAssignableFrom<BadRequestResult>(result);
@@ -143,7 +144,7 @@ namespace XUnitMoqTests
             // Arrange
 
             // Act
-            var result = _employeeController.PutEmployee(Guid.NewGuid(), new Employee()).Result;
+            var result = _employeeController.PutEmployee(Guid.NewGuid(), new Employee(), CancellationToken.None).Result;
 
             // Assert
             var badResult = Assert.IsAssignableFrom<BadRequestResult>(result);
@@ -155,11 +156,11 @@ namespace XUnitMoqTests
         {
             // Arrange
             var employee = DataSeeder.MockSingleEmployee();
-            _mockEmpRepo.Setup(repo => repo.Update(employee))
+            _mockEmpRepo.Setup(repo => repo.Update(employee, CancellationToken.None))
                 .ReturnsAsync(default(Employee));
 
             // Act
-            var result = _employeeController.PutEmployee(Guid.NewGuid(), employee).Result;
+            var result = _employeeController.PutEmployee(Guid.NewGuid(), employee, CancellationToken.None).Result;
 
             // Assert
             var badResult = Assert.IsAssignableFrom<BadRequestResult>(result);
@@ -171,11 +172,11 @@ namespace XUnitMoqTests
         {
             // Arrange
             var employee = DataSeeder.MockSingleEmployee();
-            _mockEmpRepo.Setup(repo => repo.Update(employee))
+            _mockEmpRepo.Setup(repo => repo.Update(employee, CancellationToken.None))
                 .ReturnsAsync(employee);
 
             // Act
-            var result = _employeeController.PutEmployee(employee.Id, employee).Result;
+            var result = _employeeController.PutEmployee(employee.Id, employee, CancellationToken.None).Result;
 
             // Assert
             var okResult = Assert.IsAssignableFrom<OkObjectResult>(result);
@@ -193,7 +194,7 @@ namespace XUnitMoqTests
             // Arrange
 
             // Act
-            var result = _employeeController.DeleteEmployee(Guid.Empty).Result;
+            var result = _employeeController.DeleteEmployee(Guid.Empty, CancellationToken.None).Result;
 
             // Assert
             var badResult = Assert.IsAssignableFrom<BadRequestResult>(result);
@@ -204,11 +205,11 @@ namespace XUnitMoqTests
         public void DeleteEmployee_EmployeeIsNotFound_ShouldReturnNotFound()
         {
             // Arrange
-            _mockEmpRepo.Setup(repo => repo.GetById(Guid.NewGuid()))
+            _mockEmpRepo.Setup(repo => repo.GetById(Guid.NewGuid(), CancellationToken.None))
                 .ReturnsAsync(default(Employee));
 
             // Act
-            var result = _employeeController.DeleteEmployee(Guid.NewGuid()).Result;
+            var result = _employeeController.DeleteEmployee(Guid.NewGuid(), CancellationToken.None).Result;
 
             // Assert
             var notFoundResult = Assert.IsAssignableFrom<NotFoundResult>(result);
@@ -220,12 +221,12 @@ namespace XUnitMoqTests
         {
             // Arrange
             var employee = DataSeeder.MockSingleEmployee();
-            _mockEmpRepo.Setup(repo => repo.GetById(employee.Id))
+            _mockEmpRepo.Setup(repo => repo.GetById(employee.Id, CancellationToken.None))
                 .ReturnsAsync(employee);
-            _mockEmpRepo.Setup(repo => repo.Remove(employee));
+            _mockEmpRepo.Setup(repo => repo.Remove(employee.Id, CancellationToken.None));
 
             // Act
-            var result = _employeeController.DeleteEmployee(employee.Id).Result;
+            var result = _employeeController.DeleteEmployee(employee.Id, CancellationToken.None).Result;
 
             // Assert
             var okResult = Assert.IsAssignableFrom<OkObjectResult>(result);
