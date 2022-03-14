@@ -61,6 +61,14 @@ namespace SampleCQRSMediatR.Repositories.Concretes
             return null;
         }
 
+        public async Task<Employee> UpdateV2(Employee updatingEmployee, CancellationToken cancellationToken)
+        {
+            _context.Entry(updatingEmployee).State = EntityState.Modified;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return updatingEmployee;
+        }
+
         public async Task<bool> EmployeeExists(Guid id, CancellationToken cancellationToken)
         {
             return await _context.Employees.AnyAsync(_ => _.Id == id, cancellationToken);

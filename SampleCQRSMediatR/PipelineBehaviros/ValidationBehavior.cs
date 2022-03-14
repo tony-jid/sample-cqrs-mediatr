@@ -13,7 +13,7 @@ namespace SampleCQRSMediatR.PipelineBehaviros
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators  )
+        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
         {
             _validators = validators;
         }
@@ -22,8 +22,8 @@ namespace SampleCQRSMediatR.PipelineBehaviros
         {
             var context = new ValidationContext<TRequest>(request);
             var failures = _validators
-                .Select(x => x.Validate(context))
-                .SelectMany(x => x.Errors) // Flatten all error lists of all ValidationResults
+                .Select(async x => await x.ValidateAsync(context, cancellationToken)) // Performing async validation
+                .SelectMany(x => x.Result.Errors) // Flattening all error lists of all ValidationResults
                 .Where(x => x != null)
                 .ToList();
 

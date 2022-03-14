@@ -49,11 +49,11 @@ namespace SampleCQRSMediatR
             // Register the mediator
             services.AddMediatR(typeof(Startup));
 
-            // Register ValidationBehavior for all requests and responses
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-
             // Register all validators that inherite FluentValidation.AbstractValidator
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+
+            // Register ValidationBehavior for all requests and responses
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

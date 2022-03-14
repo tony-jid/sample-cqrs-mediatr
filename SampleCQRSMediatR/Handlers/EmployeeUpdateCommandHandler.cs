@@ -29,7 +29,7 @@ namespace SampleCQRSMediatR.Handlers
                 Salary = request.Salary
             };
 
-            return await _employeeRepo.Update(updatingEmployee, cancellationToken);
+            return await _employeeRepo.UpdateV2(updatingEmployee, cancellationToken);
         }
     }
 }

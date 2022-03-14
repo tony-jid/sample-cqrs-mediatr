@@ -12,6 +12,9 @@ namespace SampleCQRSMediatR.Validators
         // Constructor also supports Dependency Injection
         public EmployeeAddCommandValidator()
         {
+            RuleFor(x => x)
+                .NotNull();
+
             RuleFor(x => x.Name)
                 .NotEmpty();
 

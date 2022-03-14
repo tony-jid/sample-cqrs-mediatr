@@ -13,6 +13,7 @@ namespace SampleCQRSMediatR.Repositories.Interfaces
         Task<Employee> GetById(Guid id, CancellationToken cancellationToken);
         Task<Employee> Add(Employee newEmployee, CancellationToken cancellationToken);
         Task<Employee> Update(Employee updatingEmployee, CancellationToken cancellationToken);
+        Task<Employee> UpdateV2(Employee updatingEmployee, CancellationToken cancellationToken);
         Task<Employee> Remove(Guid id, CancellationToken cancellationToken);
         Task<bool> EmployeeExists(Guid id, CancellationToken cancellationToken);
     }
