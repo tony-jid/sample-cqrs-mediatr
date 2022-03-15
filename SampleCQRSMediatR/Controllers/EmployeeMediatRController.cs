@@ -17,12 +17,10 @@ namespace SampleCQRSMediatR.Controllers
     [ApiController]
     public class EmployeeMediatRController : ControllerBase
     {
-        private readonly IEmployeeRepo _employeeRepo;
         private readonly IMediator _mediator;
 
-        public EmployeeMediatRController(IEmployeeRepo employeeRepo, IMediator mediator)
+        public EmployeeMediatRController(IMediator mediator)
         {
-            _employeeRepo = employeeRepo;
             _mediator = mediator;
         }
 
@@ -48,6 +46,7 @@ namespace SampleCQRSMediatR.Controllers
         [HttpPost]
         public async Task<IActionResult> PostEmployee([FromBody] EmployeeAddCommand command, CancellationToken cancellationToken)
         {
+            if (command == null) return BadRequest();
             var result = await _mediator.Send(command, cancellationToken);
             return CreatedAtAction(nameof(GetEmployee), new { id = result.Id }, result);
         }
@@ -56,6 +55,7 @@ namespace SampleCQRSMediatR.Controllers
         [HttpPut]
         public async Task<IActionResult> PutEmployee([FromBody] EmployeeUpdateCommand command, CancellationToken cancellationToken)
         {
+            if (command == null) return BadRequest();
             var updatedEmployee = await _mediator.Send(command, cancellationToken);
             return updatedEmployee != null ? (IActionResult) Ok(updatedEmployee) : BadRequest();
         }

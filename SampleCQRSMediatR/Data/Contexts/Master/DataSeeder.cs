@@ -32,7 +32,7 @@ namespace SampleCQRSMediatR.Data.Contexts.Master
                 Id = SingleEmployeeId,
                 Name = "Tony",
                 Department = "IT",
-                Salary = 100000
+                Salary = 150000
             };
         }
 

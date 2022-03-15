@@ -20,7 +20,7 @@ namespace SampleCQRSMediatR.PipelineBehaviros
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            var context = new ValidationContext<TRequest>(request);
+            var context = new ValidationContext<TRequest>(request); // Getting validators of the request from FlientValidation.ValidationContext
             var failures = _validators
                 .Select(async x => await x.ValidateAsync(context, cancellationToken)) // Performing async validation
                 .SelectMany(x => x.Result.Errors) // Flattening all error lists of all ValidationResults
